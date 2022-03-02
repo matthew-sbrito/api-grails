@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<output-test url="file://$MODULE_DIR$/../out/test/grails-app"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="groovy-4.0.0" value="project"/>
+	</levels>
+</component>

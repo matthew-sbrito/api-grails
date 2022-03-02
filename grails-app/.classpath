@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="conf"/>
+	<classpathentry kind="src" path="controllers"/>
+	<classpathentry kind="src" path="init"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/groovy-4.0.0"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
