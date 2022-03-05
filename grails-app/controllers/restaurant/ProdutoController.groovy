@@ -1,24 +1,27 @@
 package restaurant
 
-import grails.rest.RestfulController
-
 import org.springframework.http.HttpStatus
 
-class ProdutoController extends RestfulController<Produto> {
+class ProdutoController {
 
     static responseFormats = ['json', 'xml']
 
     static allowedMethods = [
         create: 'POST',
         update: 'PUT',
+        delete: 'DELETE'
     ]
 
-    ProdutoController() {
-        super(Produto)
+    def index(){
+        Produto[] list = Produto.list()
+
+        def products = list.collect { it.toResponse() }
+
+        def arrayResponse = Response.ok(['products': products])
+        respond arrayResponse, [status: HttpStatus.OK]
     }
 
     def show() {
-
         String id = params.id
 
         Produto produto = Produto.get(id)
@@ -28,7 +31,8 @@ class ProdutoController extends RestfulController<Produto> {
             respond error, [status: HttpStatus.NOT_FOUND]
         }
 
-        respond produto, [status: HttpStatus.OK]
+        def response = Response.ok(produto.toResponse())
+        respond response, [status: HttpStatus.OK]
 
     }
 
@@ -48,9 +52,10 @@ class ProdutoController extends RestfulController<Produto> {
             return
         }
 
-        produto.save()
+        produto.save(flush: true)
 
-        respond produto, [status: HttpStatus.CREATED]
+        def response = Response.ok(produto.toResponse())
+        respond response, [status: HttpStatus.CREATED]
     }
 
 
@@ -64,17 +69,37 @@ class ProdutoController extends RestfulController<Produto> {
             respond error, [status: HttpStatus.NOT_FOUND]
         }
 
-        Produto produtoRequest = Produto.fromRequest(request)
-        Estoque estoqueRequest = Estoque.fromRequest(request)
 
-        estoqueRequest.id = produto.estoque.id
+        def requestBody = request.JSON
 
-        estoqueRequest.save()
+        produto.nome  = requestBody['nome']
+        produto.preco = requestBody['preco']
+        produto.estoque.quantidade = requestBody['quantidade']
+        produto.estoque.quantidadeMinima = requestBody['quantidadeMinima']
 
-        produtoRequest.id = produto.id
-        produtoRequest.estoque = estoqueRequest
+        produto.save(flush: true)
 
-        respond produto, [status: HttpStatus.OK]
+        def response = Response.ok(produto.toResponse())
+        respond response, [status: HttpStatus.OK]
+    }
+
+    def delete(){
+        String id = params.id
+
+        Produto produto = Produto.get(id)
+
+        if(produto == null) {
+            def error = Response.error("Produto não encontrado", HttpStatus.NOT_FOUND);
+            respond error, [status: HttpStatus.NOT_FOUND]
+        }
+
+        produto.estoque.delete()
+        produto.estoque = null
+        produto.delete flush: true
+
+        def response = Response.ok(['message': 'Produto excluido com sucesso!'])
+        respond response, [status: HttpStatus.OK]
+
     }
 
 }

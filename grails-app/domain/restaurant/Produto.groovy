@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest
 
 class Produto {
 
-    String nome;
-    Double preco;
-    Estoque estoque;
+    String nome
+    Double preco
+    Estoque estoque
 
     static hasMany = [favoritos:Cliente, itens:ItemPedido]
     static belongsTo = [Cliente]
@@ -36,6 +36,15 @@ class Produto {
         produto.preco = requestBody['preco']
 
         return produto
+    }
+
+    def toResponse() {
+        return [
+                'id': this.id,
+                'nome': this.nome,
+                'preco': this.preco,
+                'estoque': this.estoque.toResponse()
+        ]
     }
 
 }

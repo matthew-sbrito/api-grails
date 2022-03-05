@@ -13,4 +13,14 @@ class Response {
         return response
     }
 
+    static def ok(params){
+        def response = new HashMap()
+
+        params.each { key, value ->
+            response.put(key, value)
+        }
+
+        return response
+    }
+
 }

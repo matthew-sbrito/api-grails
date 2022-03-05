@@ -4,8 +4,10 @@ import javax.servlet.http.HttpServletRequest
 
 class Estoque {
 
-    Integer quantidade;
-    Integer quantidadeMinima;
+    Integer quantidade
+    Integer quantidadeMinima
+
+    Produto produto
 
     static belongsTo = [produto:Produto]
 
@@ -17,7 +19,7 @@ class Estoque {
     }
 
     static mapping = {
-        table name: "estoques";
+        table name: "estoques"
     }
 
     def static fromRequest(HttpServletRequest request){
@@ -29,5 +31,12 @@ class Estoque {
         estoque.quantidadeMinima = requestBody['quantidadeMinima'].toInteger()
 
         return estoque;
+    }
+
+    def toResponse() {
+        return [
+                'quantidade': this.quantidade,
+                'quantidadeMinima': this.quantidadeMinima
+        ]
     }
 }
